@@ -6,6 +6,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+    <!-- Alertify 라이브러리 -->
+    <!-- JavaScript -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+	<!-- Default theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+	<!-- Semantic UI theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css"/>
     <!-- jQuery 라이브러리 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- 부트스트랩에서 제공하고 있는 스타일 -->
@@ -63,6 +73,17 @@
 </head>
 <body>
 
+  <!-- 1회성 알람문구 기능 -->
+   <c:if test="${ not empty alertMsg }">  <!-- 알람메세지 내용이 있다면 -->
+	     <script>
+	      // script 태그 안에서는 스크립틀릿이 인식되었음
+	      // script 태그 안에서는 core 라이브러리 태그가 인식되지 않음 => 사용불가
+	       //alert("${ alertMsg}");
+	      alertify.alert("서비스 성공","${ alertMsg }");
+	      
+	     </script>
+	    <c:remove var="alertMsg" scope="session" />
+     </c:if>
     <div id="header">
         <div id="header_1">
             <div id="header_1_left">
@@ -73,14 +94,14 @@
                 <c:choose>
                    <c:when test="${ empty loginUser }">
 		                <!-- 로그인 전 -->
-		                <a href="">회원가입</a>
+		                <a href="enrollForm.me">회원가입</a>
 		                <a data-toggle="modal" data-target="#loginModal">로그인</a> <!-- 모달의 원리 : 이 버튼 클릭시 data-targer에 제시되어있는 해당 아이디의 div요소를 띄워줌 -->
 		           </c:when> 
 		           <c:otherwise>
 		                <!-- 로그인 후 -->
 		                    <label>${ loginUser.userName }님 환영합니다</label> &nbsp;&nbsp;
-		                    <a href="">마이페이지</a>
-		                    <a href="">로그아웃</a>
+		                    <a href="myPage.me">마이페이지</a>
+		                    <a href="logout.me">로그아웃</a>
 		           </c:otherwise>
                 </c:choose>
             </div>
@@ -89,7 +110,7 @@
             <ul>
                 <li><a href="">HOME</a></li>
                 <li><a href="">공지사항</a></li>
-                <li><a href="">자유게시판</a></li>
+                <li><a href="list.bo">자유게시판</a></li>
                 <li><a href="">사진게시판</a></li>
             </ul>
         </div>
