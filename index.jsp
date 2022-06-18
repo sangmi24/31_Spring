@@ -1,39 +1,150 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>  <!--온라인 방식-->
 </head>
 <body>
-  
-  <!--
-      * Spring Framework의 특징
-      1. IOC (Inversion Of Control)
-             제어의 역전 => 객체들을 관리할 권한이 개발자가 아닌 Spring한테 있다.
-                             내가 직접적으로 new 구문을 이용하여 객체를 생성할 일이 없다.
-      2. DI (Dependency Injection)
-             의존성 주입 => 객체관의 의존관계를 알아서 설정해준다.
-                                 예) Controller =>Service =>Dao 객체 생성    
-      3.POJO (Plain Old Java Object)
-            내가 직접 만든 클래스를 지칭  => POJO Class
-							    다른 프레임워크들은 대부분 내가 직접만든 클래스를 혼용해서 쓸 수 없게 막혀있는데
-							  Spring 이나 MyBatis 는 내가 직접 만든 크래스를 혼용해서 쓸 수 있다 라는 특징 
-      4. Spring AOP (Aspect Oriented Programming)
-              관점지향 프로그래밍=> 객체지향프로그래밍을 보완한 개념
-                                           객체지향에서도 부족했던 재활용성, 코드의 중복을 더 줄여서 모듈화하게 도와주는 기법 
-      5. Spring JDBC
-             영속성 작업과 관련된 프레임워크들과의 연동을 지원함(MyBatis 와 결합해서 사용 가능)
-      6. Spring MVC
-      MVC 패턴으로 코딩하기 위한 Model, View, Controller 간의 관계를 알아서 IOC, DI 를 통해서 관리해주겠다.
-      7. PSA (Portable Service Abstraction)
-           수많은 모듈들을 갖다 붙여 쓸 수 있는데 일일이 연동해주는 것이 아니라 나중에 모듈만 바꿔치기 할 수 있게끔 도와주겠다.                                                                                              
-   -->
-     여긴 index.jsp야
-     
-   <jsp:forward page="WEB-INF/views/main.jsp"/>  
    
+    <h1>Spring 에서의 AJAX 사용법</h1>
+    
+    <h3>1. 요청 시 전달값을 보내고, 응답 결과를 받아오기 </h3>
+    
+        이름: <input type="text" id="name"> <br>
+        나이: <input type="number" id="age"> <br>
+    <button onclick="test1();">전송</button> <br>
+    <div id="result1"></div>
+   
+    <script>
+       function test1() {
+    	   
+    	   $.ajax({
+    		   url : "ajax1.do",
+    		   data : {
+    			   name : $("#name").val(),
+    			   age : $("#age").val()
+    		   },
+    		   success : function(result) {
+    			   
+    			   //console.log(result);
+    			   
+    			  // $("#result1").text(result);
+    			   
+    			   //JSONArray 를 이용하여 여러개의 응답데이터 넘겨받기
+    			   /*
+    			   var resultStr = "이름: " +result[0] + "<br>"
+    			                  +"나이: " +result[1];
+    			   $("#result1").html(resultStr);
+    			   */
+    			   
+    			   //JSONObject를 이용하여 여러개의 응답데이터 넘겨받기
+    			   //=> 속성에 접근 : 객체명.속성명 또는 객체명["속성명"]
+    			   
+    			   var resultStr = "이름 : " +result.name + "<br>"
+    			                  +"나이: " +result.age;
+    			   
+    			   $("#result1").html(resultStr);
+    			 
+    			   
+    		   },
+    		   error : function() {
+    			   console.log("ajax 통신 실패");
+    		   }
+    		   
+    	   });
+    	   
+       }
+    </script>
+     <hr>
+     <h3>2.조회요청 후 조회된 한 회원의 객체를 응답 받아서 출력해보기 </h3>
+     
+     조회할 회원번호 : <input type="number" id="userNo"> <br>
+     <button id="btn">조회</button>
+     
+     <div id="result2"></div>
+     
+     <script>
+       $(function(){
+    	  
+    	    $("#btn").click(function(){
+    	    	
+    	    	 $.ajax({
+    	    		 url : "ajax2.do",
+    	    		 data : {userNo : $("#userNo").val()},
+    	    		 success : function(result) {
+    	    			 //console.log(result);
+    	    			 
+    	    			 var resultStr = "<ul>"
+    	    			                 +"<li>이름 :"+ result.userName +"</li>"
+    	    			                 +"<li>아이디 :"+ result.userId +"</li>"
+    	    			                 +"<li>비밀번호 :"+ result.userPwd +"</li>"
+    	    			                 +"<li>나이 :"+ result.age +"</li>"
+    	    			                 +"<li>휴대폰:"+ result.phone +"</li>"
+    	    			                 +"</ul>";
+    	    			                 
+    	    			  $("#result2").html(resultStr);               
+    	    		 },
+    	    		 error : function() {
+    	    			 console.log("ajax 통신 실패!");
+    	    		 }
+    	    	 });
+    	    	 
+    	    });
+       });
+     </script>
+     <hr>
+     
+     <h3>3.조회요청 후 조회된 회원리스트를 응답받아서 출력해보기</h3>
+     
+     <button onclick="test3();">회원 전체 조회</button>
+     <br><br>
+     
+     <table border="1" id="result3">
+       <thead>
+         <tr>
+           <th>아이디</th>
+           <th>비밀번호</th>
+           <th>이름</th>
+           <th>나이</th>
+           <th>전화번호</th>
+         </tr>
+       </thead>
+       <tbody> </tbody>
+     </table>
+     
+     <script>
+       function test3(){
+    	   
+    	   $.ajax({
+    		   url : "ajax3.do",
+    		   success : function(result) {
+    			   
+    			    //console.log(result);
+    			    var resultStr = "";
+    			    
+    			    for(var i=0; i<result.length; i++){
+    			    	resultStr += "<tr>"
+    			    	          +    "<td>" + result[i].userId+"</td>"
+    			    	          +    "<td>" + result[i].userPwd+"</td>"
+    			    	          +    "<td>" + result[i].userName+"</td>"
+    			    	          +    "<td>" + result[i].age+"</td>"
+    			    	          +    "<td>" + result[i].phone+"</td>"
+    			    	          +  "</tr>";
+    			    }
+    			    $("#result3>tbody").html(resultStr);
+    		   },
+    		   error : function(){
+    			   console.log("ajax 통신 실패");
+    		   }
+    	   });
+    	   
+       }
+     </script>
+     
    
 </body>
 </html>
