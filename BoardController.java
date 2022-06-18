@@ -14,11 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.board.model.vo.Board;
+import com.kh.spring.board.model.vo.Reply;
 import com.kh.spring.common.model.vo.PageInfo;
 import com.kh.spring.common.template.Pagination;
 
@@ -295,6 +298,29 @@ public class BoardController {
 			   return "common/errorPage"; // /WEB-INF/views/common/errorPage.jsp
 		   }
 	   }
+	   
+	   @ResponseBody
+	   @RequestMapping(value="rlist.bo", produces="application/json; charset=UTF-8")
+	   public String ajaxSelectReplyList(int bno) {
+		   
+		   
+		   ArrayList<Reply> list = boardService.selectReplyList(bno);
+		   
+		   return new Gson().toJson(list);
+		   
+	   }
+	   
+	   @ResponseBody
+	   @RequestMapping(value="rinsert.bo", produces="text/html; charset=UTF-8")
+	   public String ajaxInsertReply(Reply r) {
+		   
+		   //Ajax 또한 커맨드 객체 방식으로 요청시 전달값을 받을 수 있다.
+		    int result = boardService.insertReply(r);
+		   
+		    return (result > 0) ? "success" : "fail";
+	   }
+	   
+	   
 	   
 	        // * 스프링에서 반드시 요청을 처리하는 메소드만 Controller에 들어가라는 법은 없다
 			// 현재 넘어온 첨부파일의 이름을 수정 후 서버의 그 폴더에 저장하는 메소드
