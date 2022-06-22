@@ -79,7 +79,7 @@
 	      // script 태그 안에서는 스크립틀릿이 인식되었음
 	      // script 태그 안에서는 core 라이브러리 태그가 인식되지 않음 => 사용불가
 	       //alert("${ alertMsg}");
-	      alertify.alert("서비스 성공","${ alertMsg }");
+	      alertify.alert("알람","${ alertMsg }");
 	      
 	     </script>
 	    <c:remove var="alertMsg" scope="session" />
@@ -95,7 +95,7 @@
                    <c:when test="${ empty loginUser }">
 		                <!-- 로그인 전 -->
 		                <a href="enrollForm.me">회원가입</a>
-		                <a data-toggle="modal" data-target="#loginModal">로그인</a> <!-- 모달의 원리 : 이 버튼 클릭시 data-targer에 제시되어있는 해당 아이디의 div요소를 띄워줌 -->
+		                <a data-toggle="modal" data-target="#loginModal">로그인</a> <!-- 모달의 원리 : 이 버튼 클릭시 data-target에 제시되어있는 해당 아이디의 div요소를 띄워줌 -->
 		           </c:when> 
 		           <c:otherwise>
 		                <!-- 로그인 후 -->
@@ -130,9 +130,17 @@
                     <!-- Modal body -->
                     <div class="modal-body">
                         <label for="userId" class="mr-sm-2">ID : </label>
-                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name="userId"> <br>
+                        <input type="text" class="form-control mb-2 mr-sm-2" placeholder="Enter ID" id="userId" name="userId" value="${ cookie.saveId.value }"> <br>
                         <label for="userPwd" class="mr-sm-2">Password : </label>
-                        <input type="password" class="form-control mb-2 mr-sm-2" placeholder="Enter Password" id="userPwd" name="userPwd">
+                        <input type="password" class="form-control mb-2 mr-sm-2" placeholder="Enter Password" id="userPwd" name="userPwd"> <br>
+                        <c:choose>
+                           <c:when test="${ not empty cookie.saveId }">
+                             <input type="checkbox" id="saveId" name="saveId" value="y" checked> <label for="saveId">아이디 저장</label>
+                           </c:when>
+                           <c:otherwise>
+                             <input type="checkbox" id="saveId" name="saveId" value="y"> <label for="saveId">아이디 저장</label>
+                           </c:otherwise>
+                        </c:choose>                        
                     </div>
                            
                     <!-- Modal footer -->
