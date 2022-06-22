@@ -1,5 +1,7 @@
 package com.kh.spring.member.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.service.MemberService;
@@ -227,8 +230,24 @@ public class MemberController {
 	public ModelAndView loginMember(
 			                  Member m,
 			                  HttpSession session,
-			                  ModelAndView mv) {
+			                  ModelAndView mv,
+			                  String saveId,
+			                  HttpServletResponse response) {
 		
+		// saveId 값이 "y" 라면 => 아이디를 저장하겠다. => 쿠키 생성
+		if(saveId != null && saveId.equals("y")) {
+			
+			Cookie cookie = new Cookie("saveId", m.getUserId());
+			cookie.setMaxAge(1 * 24 *60 * 60 ); // 초로 환산해서 만료시간 1일
+			response.addCookie(cookie);
+		}
+		else {
+			
+           Cookie cookie = new Cookie("saveId", m.getUserId());
+           cookie.setMaxAge(0); // 삭제한 효과
+           response.addCookie(cookie);
+			
+		}
 		// 비밀번호 암호화 후
 		// m의 userPwd 필드 : 평문 비밀번호값
 		// loginUser 의 userPwd 필드 : 암호화된 비밀번호값
@@ -446,8 +465,27 @@ public class MemberController {
 			
 			return "redirect:myPage.me";
 		}
+	}
+	@ResponseBody
+	@RequestMapping(value="idCheck.me", produces="text/html; charset=UTF-8")
+	public String idCheck(String checkId) {
 		
+		//System.out.println(checkId);
 		
+		int count = memberService.idCheck(checkId);
+		
+		/*
+		// count에 1이 담겨있을경우 => 이미 사용중인 아이디가 있음(사용불가)
+		 if(count >0 ) { //이미 존재하는 아이디=> "NNNNN"
+			 return "NNNNN";
+		 }
+		 else { //사용 가능한 아이디 =>"NNNNY"
+			 return "NNNNY";
+		 }
+		*/
+		
+		//return (조건식) ? ㅌㅌㅌ : xxx; 삼항연산자 이용
+		return (count >0 ) ? "NNNNN" : "NNNNY";
 		
 	}
 	

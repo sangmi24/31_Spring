@@ -17,11 +17,13 @@
             <h2>회원가입</h2>
             <br>
 
-            <form action="insert.me" method="post">
+            <form action="insert.me" method="post" id="enrollForm">
                 <div class="form-group">
                     <label for="userId">* ID : </label>
                     <input type="text" class="form-control" id="userId" placeholder="Please Enter ID" name="userId" required> <br>
-
+                    <div id="checkResult" style="font-size:0.8em; display:none;"></div>     
+                    <br>     
+                         
                     <label for="userPwd">* Password : </label>
                     <input type="password" class="form-control" id="userPwd" placeholder="Please Enter Password" name="userPwd" required> <br>
 
@@ -51,12 +53,69 @@
                 </div> 
                 <br>
                 <div class="btns" align="center">
-                    <button type="submit" class="btn btn-primary">회원가입</button>
+                    <button type="submit" class="btn btn-primary" disabled>회원가입</button>
                     <button type="reset" class="btn btn-danger">초기화</button>
                 </div>
             </form>
         </div>
         <br><br>
+        
+        <script>
+          $(function() {
+        	  
+        	  //아이디를 입력하는 input 요소 객체 자체를 변수에 담아두기
+        	  var $idInput = $("#enrollForm input[name=userId]");
+        	  
+        	  $idInput.keyup(function() {
+        		 // console.log($idInput.val());
+        		 
+        		 // 우선 최소5글자 이상으로 입력되어야지만 ajax를 요청 할 수 있게끔 막아주자
+        		 if($idInput.val().length >= 5){
+        			 
+        			 $.ajax({
+        				 url : "idCheck.me",
+        				 data : {checkId : $idInput.val()},
+        				 success : function(result) {
+        					 
+        					 if(result == "NNNNN"){ //사용 불가능
+        						 
+        						 // 빨간색 메세지(사용불가능) 출력
+        						 $("#checkResult").show();
+        					     $("#checkResult").css("color","red").text("중복된 아이디가 존재합니다. 다시 입력해주세요.");
+        						 
+        					     // 회원가입버튼 비활성
+        					     $("#enrollForm :submit").attr("disabled",true);
+        					     
+        					 }
+        					 else{ //사용 가능
+        						 
+        						 //초록색 메세지(사용가능) 출력
+        						 $("#checkResult").show();
+        					     $("#checkResult").css("color","green").text("멋진 아아디네요!");
+        						 
+        					     //회원가입버튼 활성
+        					     $("#enrollForm :submit").attr("disabled",false);
+        					     
+        					 }
+        					 
+        				 },
+        				 error : function() {
+        					 console.log("아이디 중복 체크용 ajax 통신 실패!");
+        				 }
+        			 });
+        			 
+        		 }
+        		 else{ //5글자 미만일때 => 회원가입버튼 비활성, 메세지 숨기기
+        			 
+        			 $("#checkResult").hide();
+        		     $("#enrollForm :submit").attr("disabled",true);
+        			 
+        		 }
+        		 
+        	  });
+        	  
+          });   
+        </script>
 
     </div>
 
