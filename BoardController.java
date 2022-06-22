@@ -320,8 +320,20 @@ public class BoardController {
 		    return (result > 0) ? "success" : "fail";
 	   }
 	   
+	   @ResponseBody
+	   @RequestMapping(value="topList.bo", produces="application/json; charset=UTF-8")
+	   public String ajaxTopBoardList() {
+		   
+		   ArrayList<Board> list = boardService.selectTopBoardList();
+		   
+		   //System.out.println(new Gson().toJson(list));
+		   //[{키:밸류, 키:밸류}, {키:밸류, 키:밸류},...]
+		   
+		   return new Gson().toJson(list);
+	   }
 	   
-	   
+	       
+	         // 일반 메소드
 	        // * 스프링에서 반드시 요청을 처리하는 메소드만 Controller에 들어가라는 법은 없다
 			// 현재 넘어온 첨부파일의 이름을 수정 후 서버의 그 폴더에 저장하는 메소드
 			//=> url 요청을 처리하는 메소드가 아닌 일반 메소드로 만듬

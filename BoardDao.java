@@ -54,17 +54,20 @@ public class BoardDao {
 		
 		return sqlSession.update("boardMapper.updateBoard",b);
 	}
-	//댓글 조회
+	//8. 조회
 	public ArrayList<Reply> selectReplyList(SqlSessionTemplate sqlSession,int boardNo) {
 		
 		return (ArrayList)sqlSession.selectList("boardMapper.selectReplyList",boardNo);
 	}
-	//댓글 작성
+	//9.댓글 작성
 	public int insertReply(SqlSessionTemplate sqlSession, Reply r) {
 		
 		return sqlSession.insert("boardMapper.insertReply",r);
 		
 	}
-	
-	
+	// 10. 조회수 top5리스트 조회용 
+	public ArrayList<Board> selectTopBoardList(SqlSessionTemplate sqlSession){
+		
+		 return (ArrayList)sqlSession.selectList("boardMapper.selectTopBoardList");
+	}
 }

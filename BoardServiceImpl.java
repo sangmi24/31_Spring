@@ -79,5 +79,12 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.insertReply(sqlSession, r);
 		
 	}
+	
+	// 10. 조회수 top5리스트 조회용 서비스
+	@Override
+	public ArrayList<Board> selectTopBoardList() {
+		
+		return boardDao.selectTopBoardList(sqlSession);
+	}
 
 }
