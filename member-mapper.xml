@@ -71,6 +71,11 @@
        WHERE USER_ID = #{userId}   
    </update>
    
+   <select id="idCheck" parameterType="string" resultType="_int">
+     SELECT COUNT(*)
+     FROM MEMBER
+     WHERE USER_ID = #{checkId}
+   </select>
    
    
    
